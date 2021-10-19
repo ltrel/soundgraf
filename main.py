@@ -23,10 +23,6 @@ def semitones_offset(base, offset):
     return base * np.power(2, offset / 12)
 
 
-def hz_to_sin_scale(freq, sample_rate):
-    return (freq * 2 * np.pi) / sample_rate
-
-
 def render_function(f, domain, note_range, seconds):
     note_min, note_max = note_range
 
