@@ -1,7 +1,6 @@
 import sounddevice as sd
 import soundfile as sf
 import numpy as np
-import matplotlib.pyplot as plt
 
 SAMPLE_RATE = 44100
 
@@ -59,5 +58,3 @@ samples = render_function(f, domain, note_range, seconds)
 sd.play(samples, SAMPLE_RATE)
 sd.wait()
 sf.write("graph.wav", samples, SAMPLE_RATE)
-
-plt.show()
