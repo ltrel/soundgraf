@@ -39,8 +39,6 @@ def semitones_offset(base, offset):
 
 
 def render_function(f, domain, note_range, seconds):
-    note_min, note_max = note_range
-
     # Estimate the range of the function across the desired domain
     # down to a resolution of one millisecond
     f_range = estimate_range(f, domain[0], domain[1], int(seconds * 1000))
