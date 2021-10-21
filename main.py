@@ -67,13 +67,13 @@ def render_function(f, domain, note_range, seconds):
     return samples
 
 
-# def f(x): return 1/8 * (x + 2) * (x - 1) * (x - 3)
+# f = lambda x: 1/8 * (x + 2) * (x - 1) * (x - 3)
 
 # seconds = 2
 # domain = (-2.5, 5)
 # note_range = (-12, 12)
 
-def f(x): return math.sqrt(-x+4)
+f = lambda x: math.sqrt(-x+4)
 
 seconds = 5
 domain = (0, 6)
