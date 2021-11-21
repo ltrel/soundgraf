@@ -1,21 +1,26 @@
 import sounddevice as sd
 import soundfile as sf
 import numpy as np
+import numexpr as ne
 import math
 from matplotlib import pyplot as plt
 
 SAMPLE_RATE = 44100
 
 
-def safe_wrap(f):
-    def new_f(x):
-        try:
-            y = f(x)
-            return y if y not in (np.inf, np.NINF) else np.nan
-        except:
-            return np.nan
-
-    return new_f
+def str_to_func(f_string):
+    def f(x):
+        # Setup evaluation context with input variable and some constants
+        context = {
+            'x': x,
+            'e': np.e,
+            'pi': np.pi
+        }
+        y = ne.evaluate(f_string, context)
+        # Replace any infinities with NaN
+        y[np.isinf(y)] = np.nan
+        return y
+    return f
 
 
 def semitones_offset(base, offset):
@@ -27,7 +32,7 @@ def render_function(f, domain, note_range, seconds, range_limit=None):
 
     # Run the function on N inputs evenly spread over the desired domain
     f_inputs = np.linspace(domain[0], domain[1], num_samples)
-    f_values = (np.vectorize(safe_wrap(f)))(f_inputs)
+    f_values = f(f_inputs)
 
     # Cut off any values outside of the acceptable range, this is useful
     # for functions with vertical asymptotes
@@ -68,7 +73,8 @@ def render_function(f, domain, note_range, seconds, range_limit=None):
 # domain = (0, 6)
 # note_range = (-24, 24)
 
-f = math.tan
+f_string = 'tan(x)'
+f = str_to_func(f_string)
 
 seconds = 10
 domain = (-math.pi/2, math.pi*7/2)
