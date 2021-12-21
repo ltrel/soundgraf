@@ -73,16 +73,37 @@ def render_function(f, domain, note_range, seconds, range_limit=None):
 # domain = (0, 6)
 # note_range = (-24, 24)
 
-f_string = 'tan(x)'
+# f_string = 'tan(x)'
+# f = str_to_func(f_string)
+#
+# seconds = 10
+# domain = (-math.pi/2, math.pi*7/2)
+# note_range = (-24, 12)
+# range_limit = (-6, 6)
+
+print('Define the function to be played:')
+f_string = input('f(x) = ')
 f = str_to_func(f_string)
 
-seconds = 10
-domain = (-math.pi/2, math.pi*7/2)
-note_range = (-24, 12)
-range_limit = (-6, 6)
+print('Specify the domain to be played:')
+domain = (float(input('Lower bound: ')), float(input('Upper bound: ')))
+
+print('Specify the range to be considered (only useful for asymptotic graphs,\
+ leave blank to skip):')
+range_limit = None
+if range_min_str := input('Lower bound: '):
+    range_limit = (float(range_min_str), float(input('Upper bound: ')))
+
+print('Specify the pitch range (semitones relative to A4):')
+note_range = (float(input('Lower bound: ')), float(input('Upper bound: ')))
+
+print('Specify the duration:')
+seconds = float(input('Seconds: '))
+
+filename = input('File name (graph.wav): ') or 'graph.wav'
 
 samples = render_function(f, domain, note_range, seconds, range_limit)
 
 sd.play(samples, SAMPLE_RATE)
 sd.wait()
-sf.write("graph.wav", samples, SAMPLE_RATE)
+sf.write(filename, samples, SAMPLE_RATE)
