@@ -6,16 +6,20 @@ import math
 from matplotlib import pyplot as plt
 
 SAMPLE_RATE = 44100
+EVALUATION_CONTEXT = {
+    'e': np.e,
+    'pi': np.pi
+}
+
+
+def expr_input(prompt):
+    return ne.evaluate(input(prompt), EVALUATION_CONTEXT)
 
 
 def str_to_func(f_string):
     def f(x):
-        # Setup evaluation context with input variable and some constants
-        context = {
-            'x': x,
-            'e': np.e,
-            'pi': np.pi
-        }
+        # Add function variable to evaluation context
+        context = EVALUATION_CONTEXT | {'x': x}
         y = ne.evaluate(f_string, context)
         # Replace any infinities with NaN
         y[np.isinf(y)] = np.nan
@@ -86,19 +90,20 @@ f_string = input('f(x) = ')
 f = str_to_func(f_string)
 
 print('Specify the domain to be played:')
-domain = (float(input('Lower bound: ')), float(input('Upper bound: ')))
+domain = (expr_input('Lower bound: '), expr_input('Upper bound: '))
 
 print('Specify the range to be considered (only useful for asymptotic graphs,\
  leave blank to skip):')
 range_limit = None
 if range_min_str := input('Lower bound: '):
-    range_limit = (float(range_min_str), float(input('Upper bound: ')))
+    range_limit = (ne.evaluate(range_min_str, EVALUATION_CONTEXT),
+                   expr_input('Upper bound: '))
 
 print('Specify the pitch range (semitones relative to A4):')
-note_range = (float(input('Lower bound: ')), float(input('Upper bound: ')))
+note_range = (expr_input('Lower bound: '), expr_input('Upper bound: '))
 
 print('Specify the duration:')
-seconds = float(input('Seconds: '))
+seconds = expr_input('Seconds: ')
 
 filename = input('File name (graph.wav): ') or 'graph.wav'
 
